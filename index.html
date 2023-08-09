@@ -112,19 +112,22 @@
             row+="</tr>"
             filas.push(row)
             row ="<tr>"
-            for (let index = 0; rowTab <= totalDias; index++) {
+            for (let index = 1; rowTab <= totalDias; index++) {
                 row+=`<td>${rowTab}</td>`
-                if(index % 7 ==0){
+                if(index ==7){
                     row+="</tr>"
                     filas.push(row)
                     row="<tr>"
+                    index=0
                 }
                 rowTab++
             }
             row+="</tr>"
             filas.push(row)
 
-            let table =`<table> 
+            let table =`
+            <h2>${meses[mes.mesIndex]} ${mes.anio}</h2>
+            <table> 
                 <thead>
                     <tr>
                         <th>Domingo</th>
