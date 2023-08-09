@@ -92,9 +92,13 @@
 
         let calendarios =[]
         function createTable(mes) {
-            let fecha = new Date(mes.anio, mes.mesIndex, 0)
-            let totalDias = fecha.getDate()
-            let diaSemanaInicio = fecha.getDay()
+            let totalDias =null
+            if(mes.mesIndex==11){
+               totalDias= new Date(mes.anio+1,0,0).getDate()
+            }else{
+                 totalDias= new Date(mes.anio, mes.mesIndex+1,0).getDate()
+            }
+            let diaSemanaInicio =new Date(mes.anio,mes.mesIndex).getDay()
             let filas = []
             let row = "<tr>"
             for (let index = 0; index < diaSemanaInicio; index++) {
@@ -108,13 +112,14 @@
             row+="</tr>"
             filas.push(row)
             row ="<tr>"
-            for (let index = rowTab; index < totalDias; index++) {
-                row+=`<td>${index}</td>`
+            for (let index = 0; rowTab <= totalDias; index++) {
+                row+=`<td>${rowTab}</td>`
                 if(index % 7 ==0){
                     row+="</tr>"
                     filas.push(row)
                     row="<tr>"
                 }
+                rowTab++
             }
             row+="</tr>"
             filas.push(row)
