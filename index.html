@@ -42,7 +42,12 @@
         let listaMeses = []
 
         function analizar() {
-            
+            if(content.hasChildNodes){
+            while(content.firstChild){
+                content.removeChild(content.firstChild)
+            }
+            listaMeses=[]
+        }
             let dias = document.getElementById('cantDias')
             let fechaInicio = document.getElementById('fechaInicio')
             //////
