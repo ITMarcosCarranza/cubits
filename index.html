@@ -17,6 +17,10 @@
         .entreSemana{
             background-color: lightgreen;
         }
+        .diaFestivo{
+            background-color: lightsalmon;
+
+        }
         .mes {
             width: 400px;
             height: 300px;
@@ -47,6 +51,7 @@
         let content = document.getElementById('content')
         let meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
             "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        let mesesFestivos={0:1,1:5,2:18,4:1,8:16,10:20,11:25};
         let listaMeses = []
 
         function analizar() {
@@ -99,11 +104,16 @@
             
 
             ///////////
-            listaMeses.forEach(mes=>createTable(mes))
+            listaMeses.forEach(mes=> { 
+                if(mesesFestivos.hasOwnProperty(mes.mesIndex)){
+                    pintarMesFestivo(mes)
+                }else{
+                    createTable(mes)
+                }
+            })
 
         }
 
-        let calendarios =[]
         function createTable(mes) {
             let totalDias =null
             if(mes.mesIndex==11){
@@ -137,6 +147,91 @@
             row ="<tr>"
             for (let index = 1; rowTab <= totalDias; index++) {
                 if(index==1 || index==7){
+                    row+=`<td class='finSemana'>${rowTab}</td>`
+                }
+                else{
+                    row+=`<td class='entreSemana'>${rowTab}</td>`
+                }
+                if(index ==7){
+                    row+="</tr>"
+                    filas.push(row)
+                    row="<tr>"
+                    index=0
+                }
+                rowTab++
+            }
+            row+="</tr>"
+            filas.push(row)
+
+            let table =`
+            <h2>${meses[mes.mesIndex]} ${mes.anio}</h2>
+            <table> 
+                <thead>
+                    <tr>
+                        <th>Domingo</th>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miercoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes </th>
+                        <th>Sabado </th>
+                    </tr
+                </thead>
+                <tbody>
+                `
+            for (let index = 0; index < filas.length; index++) {
+                table+=filas[index]
+            }
+            table += `</tbody>
+                </table>
+            `
+            let div = document.createElement('div')
+            div.classList.add('mes')
+            div.innerHTML= table
+            content.appendChild(div)
+        }
+
+        function pintarMesFestivo(mes){
+            let diaFestivo = mesesFestivos[mes.mesIndex]
+            let totalDias =null
+            if(mes.mesIndex==11){
+               totalDias= new Date(mes.anio+1,0,0).getDate()
+            }else{
+                 totalDias= new Date(mes.anio, mes.mesIndex+1,0).getDate()
+            }
+            let diaSemanaInicio =new Date(mes.anio,mes.mesIndex).getDay()
+            let filas = []
+            let row = "<tr>"
+            for (let index = 0; index < diaSemanaInicio; index++) {
+                if(index==0 || index==6){
+                    row+=`<td class='finSemana'></td>`
+                }
+                else{
+                    row+=`<td class='entreSemana'></td>`
+                }
+            }
+            let rowTab=1
+            for (let index = diaSemanaInicio; index <= 6; index++) {
+                if(rowTab==diaFestivo){
+                    row+=`<td class='diaFestivo'>${rowTab}</td>`
+                    rowTab++
+                    continue
+                }else if(index==0 || index==6){
+                    row+=`<td class='finSemana'>${rowTab}</td>`
+                }
+                else{
+                    row+=`<td class='entreSemana'>${rowTab}</td>`
+                }
+                rowTab++
+            }
+            row+="</tr>"
+            filas.push(row)
+            row ="<tr>"
+            for (let index = 1; rowTab <= totalDias; index++) {
+                if(rowTab ==diaFestivo){
+                    row+=`<td class='diaFestivo'>${rowTab}</td>`
+                }
+                else if(index==1 || index==7){
                     row+=`<td class='finSemana'>${rowTab}</td>`
                 }
                 else{
