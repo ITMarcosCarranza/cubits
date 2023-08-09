@@ -11,23 +11,28 @@
             flex-wrap: wrap;
 
         }
-
+        .finSemana{
+            background-color:yellow;
+        }
+        .entreSemana{
+            background-color: lightgreen;
+        }
         .mes {
             width: 400px;
             height: 300px;
             margin: 10px;
-            background-color: bisque;
+            background-color:rgb(247, 223, 229);
             border-color: black;
-            border-radius: 5px;
-            
+            border-radius: 5px;         
             text-align: center;
         }
     </style>
 </head>
 
 <body>
-
+    <label>Fecha de inicio</label>
     <input id="fechaInicio" type="date">
+    <label>Cantidad de días</label>
     <input id="cantDias" type="number" min="0">
     <button onclick="analizar()"> Analizar</button>
 
@@ -110,18 +115,33 @@
             let filas = []
             let row = "<tr>"
             for (let index = 0; index < diaSemanaInicio; index++) {
-                row+=`<td></td>`
+                if(index==0 || index==6){
+                    row+=`<td class='finSemana'></td>`
+                }
+                else{
+                    row+=`<td class='entreSemana'></td>`
+                }
             }
             let rowTab=1
             for (let index = diaSemanaInicio; index <= 6; index++) {
-                row+=`<td>${rowTab}</td>`
+                if(index==0 || index==6){
+                    row+=`<td class='finSemana'>${rowTab}</td>`
+                }
+                else{
+                    row+=`<td class='entreSemana'>${rowTab}</td>`
+                }
                 rowTab++
             }
             row+="</tr>"
             filas.push(row)
             row ="<tr>"
             for (let index = 1; rowTab <= totalDias; index++) {
-                row+=`<td>${rowTab}</td>`
+                if(index==1 || index==7){
+                    row+=`<td class='finSemana'>${rowTab}</td>`
+                }
+                else{
+                    row+=`<td class='entreSemana'>${rowTab}</td>`
+                }
                 if(index ==7){
                     row+="</tr>"
                     filas.push(row)
