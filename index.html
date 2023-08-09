@@ -14,7 +14,7 @@
 
         .mes {
             width: 400px;
-            height: 400px;
+            height: 300px;
             margin: 10px;
             background-color: aqua;
             text-align: center;
@@ -42,6 +42,7 @@
         let listaMeses = []
 
         function analizar() {
+            
             let dias = document.getElementById('cantDias')
             let fechaInicio = document.getElementById('fechaInicio')
             //////
@@ -70,19 +71,22 @@
                     }
                     anioInicio++
                 }
-
+                for (let i = 0; i <= fechaFin.getMonth(); i++) {
+                    mesesAcumulados++
+                    listaMeses.push({ mesIndex: i, anio: anioInicio })
+    
+                }
             }
-            for (let i = 0; i <= fechaFin.getMonth(); i++) {
-                mesesAcumulados++
-                listaMeses.push({ mesIndex: i, anio: anioInicio })
-
+            else{
+                for(let i=fechaI.getMonth(); i<= fechaFin.getMonth();i++){
+                    mesesAcumulados++
+                    listaMeses.push({ mesIndex: i, anio: anioInicio })
+                }
             }
-            console.log(mesesAcumulados)
-            console.log(listaMeses)
+            
 
             ///////////
-
-
+            listaMeses.forEach(mes=>createTable(mes))
 
         }
 
@@ -115,10 +119,31 @@
             row+="</tr>"
             filas.push(row)
 
+            let table =`<table> 
+                <thead>
+                    <tr>
+                        <th>Domingo</th>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miercoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes </th>
+                        <th>Sabado </th>
+                    </tr
+                </thead>
+                <tbody>
+                `
+            for (let index = 0; index < filas.length; index++) {
+                table+=filas[index]
+            }
+            table += `</tbody>
+                </table>
+            `
+            let div = document.createElement('div')
+            div.classList.add('mes')
+            div.innerHTML= table
+            content.appendChild(div)
         }
-
-
-
 
     </script>
 
