@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        #content{
+        #content {
             display: flex;
             flex-wrap: wrap;
-          
+
         }
-        .mes{
+
+        .mes {
             width: 400px;
             height: 400px;
             margin: 10px;
@@ -19,73 +21,107 @@
         }
     </style>
 </head>
+
 <body>
-    
-<input id="fechaInicio" type="date">
-<input id="cantDias" type="number" min="0">
-<button onclick="calendarios()"> Analizar</button>
 
-<p  id="info"></p>
+    <input id="fechaInicio" type="date">
+    <input id="cantDias" type="number" min="0">
+    <button onclick="analizar()"> Analizar</button>
 
-<div id="content">
-</div>
+    <p id="info"></p>
 
-<script>
+    <div id="content">
+    </div>
 
-    let info = document.getElementById('info')
-    let content = document.getElementById('content')
-    let meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
-    "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
-    
-    function calendarios(){
-        let dias = document.getElementById('cantDias')
-        let fechaInicio = document.getElementById('fechaInicio')
-         
-        let valor =  parseInt(dias.value);
-        let fechaValue = fechaInicio.value.split('-')
-        let fechaI = new Date(fechaValue[0],fechaValue[1]-1,fechaValue[2])
-        let fechaClone= structuredClone(fechaI)
-        let fechaFinS= fechaClone.setDate(fechaClone.getDate()+valor)
-        let fechaFin = new Date(fechaFinS)
-        
-        
-        let mesesDiff = fechaFin.getMonth()- fechaI.getMonth()
-        info.innerText=`${fechaI} mas ${valor} =  ${fechaFin}
-            meses de diferencia = ${mesesDiff}
-        `
-        let mesIndex= fechaI.getMonth()
-        let anioInicio = fechaI.getFullYear()
-        for (let index = 0; index <= mesesDiff; index++) {
-            let fechaMes = new Date()
-            let div = document.createElement('div')
-            div.setAttribute('id',index)
-            div.classList.add('mes')
-            div.innerHTML=`<h2>${meses[mesIndex]} </h2>
-            <table>
-                <thead>
-                    <th>Lunes</th>
-                    <th>Martes</th>
-                    <th>Miercoles</th>
-                    <th>Jueves</th>
-                    <th>Viernes</th>
-                    <th>Sabado</th>
-                    <th>Domingo</th>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            `
-            content.appendChild(div)
-            mesIndex++
+    <script>
+
+        let info = document.getElementById('info')
+        let content = document.getElementById('content')
+        let meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        let listaMeses = []
+
+        function analizar() {
+            let dias = document.getElementById('cantDias')
+            let fechaInicio = document.getElementById('fechaInicio')
+            //////
+            let valor = parseInt(dias.value);
+            let fechaValue = fechaInicio.value.split('-')
+            let fechaI = new Date(fechaValue[0], fechaValue[1] - 1, fechaValue[2])
+            let fechaClone = structuredClone(fechaI)
+            let fechaFinStamp = fechaClone.setDate(fechaClone.getDate() + valor)
+            let fechaFin = new Date(fechaFinStamp)
+
+            /////
+            let mesesAcumulados = 0
+            let anioInicio = fechaI.getFullYear()
+            let anioFin = fechaFin.getFullYear()
+            if (fechaFin.getFullYear() > fechaI.getFullYear()) {
+                mesesAcumulados += 11 - fechaI.getMonth() + 1
+                for (let i = fechaI.getMonth(); i <= 11; i++) {
+                    listaMeses.push({ mesIndex: i, anio: anioInicio })
+                }
+
+                anioInicio++
+                while (anioFin > anioInicio) {
+                    mesesAcumulados += 12
+                    for (let i = 0; i <= 11; i++) {
+                        listaMeses.push({ mesIndex: i, anio: anioInicio })
+                    }
+                    anioInicio++
+                }
+
+            }
+            for (let i = 0; i <= fechaFin.getMonth(); i++) {
+                mesesAcumulados++
+                listaMeses.push({ mesIndex: i, anio: anioInicio })
+
+            }
+            console.log(mesesAcumulados)
+            console.log(listaMeses)
+
+            ///////////
+
+
+
         }
-    }
 
-    function createTable(inicio){
-      
-    }
+        let calendarios =[]
+        function createTable(mes) {
+            let fecha = new Date(mes.anio, mes.mesIndex, 0)
+            let totalDias = fecha.getDate()
+            let diaSemanaInicio = fecha.getDay()
+            let filas = []
+            let row = "<tr>"
+            for (let index = 0; index < diaSemanaInicio; index++) {
+                row+=`<td></td>`
+            }
+            let rowTab=1
+            for (let index = diaSemanaInicio; index <= 6; index++) {
+                row+=`<td>${rowTab}</td>`
+                rowTab++
+            }
+            row+="</tr>"
+            filas.push(row)
+            row ="<tr>"
+            for (let index = rowTab; index < totalDias; index++) {
+                row+=`<td>${index}</td>`
+                if(index % 7 ==0){
+                    row+="</tr>"
+                    filas.push(row)
+                    row="<tr>"
+                }
+            }
+            row+="</tr>"
+            filas.push(row)
+
+        }
 
 
-</script>
+
+
+    </script>
 
 </body>
+
 </html>
